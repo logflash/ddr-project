@@ -1,0 +1,15 @@
+The motivation is clear and interesting—understanding what BC policies actually learn internally is a valuable and underexplored direction. I like the focus on mechanistic interpretability for embodied policies, especially targeting concrete variables like goal distance and obstacle position. The overall pipeline is well structured: collect data → train BC → probe representations → steer behavior. It’s very great to see both a working BC policy on the real robot already! The scope is ambitious but coherent, and the planned ViT + SAE + steering direction makes sense as a natural next step.
+
+I have a few suggestions/questions on focus and execution. 1. Right now the plan is quite broad (CNN BC, VLA finetuning, ViT, SAE, steering), so I would recommend prioritizing one clean pipeline—likely ViT + SAE + steering—and going deeper there rather than spreading too thin. 2. For interpretability, it will be important to define clear quantitative metrics (e.g., linear probing accuracy for goal distance, or controlled steering success rates), otherwise it may be hard to evaluate progress. 3. For steering, I suggest starting with very controlled interventions (e.g., left/right bias) before more complex behaviors. Overall, great progress so far—focusing the scope and tightening evaluation will make the final results much stronger.
+
+----------------------------------------------------
+
+Nice project! I will mostly reiterate my comments from office hours. I think the proposal + midterm report sound good and you're genuinely making great progress. Moving forward, I think the greatest obstacle you will run into is actually finding interpretable / steerable latents given a trained SAE. The general pipeline for doing this is 1) train the forward model on your data, 2) train a SAE on the latent states of your forward model, 3) investigate the activations of your SAE, and 4) see if modifying the activations correlate with steering the forward model. Doing step 3) can be very time-consuming, and its worth exploring the current literature to see if more efficient methods exist. I also suggest using a transformer instead of a CNN as most mechinterp works focus on this architecture and its unclear if similar findings translate to CNNs
+
+----------------------------------------------------
+
+Excellent writeup and progress so far! Its great to see data on the robot.
+
+The scope for this project has always been ambitious and I believe you are making good progress. In the interest of time, it might be good to dial in and focus on a specific model + SAE and identify interesting activations. Even if you're not able to show improvements via steering, identifying even a handful of interesting features/activations in your SAE would be a successful outcome. Everything after that is just a matter of putting in enough time. Try to prioritize most of your time on that.
+
+Excited to see what you find!

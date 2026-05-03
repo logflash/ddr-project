@@ -1,0 +1,93 @@
+C:\Users\ianh\AppData\Local\Programs\Python\Python312\Lib\site-packages\timm\layers\attention.py:120: UserWarning: 1Torch was not compiled with flash attention. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\builder\windows\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:555.)
+  x = F.scaled_dot_product_attention(
+C:\Users\ianh\Documents\Code\ROB534\lekiwi_mechint\sae\train_sae.py:174: RuntimeWarning: invalid value encountered in divide
+  return np.where(denom > 1e-6, cov / denom, 0.0)            # (F, 3)
+Device: cuda
+Loaded vit_tiny_patch16_224 from ./checkpoints/vit_continuous_tiny_best.pth  (epoch 21)
+SAE: d_model=192  n_features=1536  layer=9  topk=32
+
+Collecting train activations at layer 9...
+  train_acts: (14931, 192)
+Collecting probe activations at layer 9...
+  probe_acts: (1600, 192)
+
+Training SAE  (topk=32  epochs=200)...
+  epoch   1/200  mse=2.17396  l1=0.08132
+  epoch  10/200  mse=0.03348  l1=0.13755
+  epoch  20/200  mse=0.02569  l1=0.13739
+  epoch  30/200  mse=0.02193  l1=0.13714
+  epoch  40/200  mse=0.01943  l1=0.13683
+  epoch  50/200  mse=0.01813  l1=0.13643
+  epoch  60/200  mse=0.01707  l1=0.13600
+  epoch  70/200  mse=0.01612  l1=0.13547
+  epoch  80/200  mse=0.01494  l1=0.13469
+  epoch  90/200  mse=0.01394  l1=0.13403
+  epoch 100/200  mse=0.01316  l1=0.13324
+  epoch 110/200  mse=0.01262  l1=0.13220
+  epoch 120/200  mse=0.01198  l1=0.13106
+  epoch 130/200  mse=0.01156  l1=0.12970
+  epoch 140/200  mse=0.01122  l1=0.12811
+  epoch 150/200  mse=0.01083  l1=0.12646
+  epoch 160/200  mse=0.01053  l1=0.12453
+  epoch 170/200  mse=0.01024  l1=0.12248
+  epoch 180/200  mse=0.01003  l1=0.12026
+  epoch 190/200  mse=0.00981  l1=0.11793
+  epoch 200/200  mse=0.00956  l1=0.11548
+Saved SAE to ./checkpoints/sae_layer9.pth
+
+SAE probe stats:
+  Reconstruction MSE    : 0.01026
+  Mean L0 (active/sample): 32.0 / 1536
+  Dead features         : 1486 / 1536
+
+Top 5 features per axis (by |Pearson r|):
+
+  vx:
+    #1  feature  280  r=-0.905  active=22.4%  mean_activation=4.012
+    #2  feature  477  r=+0.755  active=100.0%  mean_activation=6.188
+    #3  feature 1255  r=+0.728  active=100.0%  mean_activation=6.171
+    #4  feature 1000  r=-0.724  active=100.0%  mean_activation=6.768
+    #5  feature 1532  r=-0.678  active=37.1%  mean_activation=0.970
+
+  vy:
+    #1  feature  591  r=-0.751  active=14.2%  mean_activation=4.434
+    #2  feature 1032  r=-0.692  active=100.0%  mean_activation=6.666
+    #3  feature  746  r=-0.652  active=11.2%  mean_activation=2.715
+    #4  feature 1099  r=+0.641  active=9.8%  mean_activation=4.776
+    #5  feature  883  r=-0.628  active=99.9%  mean_activation=4.619
+
+  vtheta:
+    #1  feature  834  r=-0.823  active=25.6%  mean_activation=2.016
+    #2  feature 1464  r=+0.807  active=100.0%  mean_activation=4.466
+    #3  feature 1472  r=+0.770  active=100.0%  mean_activation=5.077
+    #4  feature  477  r=+0.705  active=100.0%  mean_activation=6.188
+    #5  feature  282  r=+0.688  active=100.0%  mean_activation=6.427
+
+Saved ./sae/results\feature_scatter.png
+
+Decoder cosine sim to contrastive steering direction:
+
+  vx:
+    #1  feature  280  pearson_r=-0.905  decoder_cos=-0.611
+    #2  feature  477  pearson_r=+0.755  decoder_cos=+0.373
+    #3  feature 1255  pearson_r=+0.728  decoder_cos=+0.140
+    #4  feature 1000  pearson_r=-0.724  decoder_cos=-0.226
+    #5  feature 1532  pearson_r=-0.678  decoder_cos=-0.039
+
+  vy:
+    #1  feature  591  pearson_r=-0.751  decoder_cos=-0.659
+    #2  feature 1032  pearson_r=-0.692  decoder_cos=-0.197
+    #3  feature  746  pearson_r=-0.652  decoder_cos=-0.238
+    #4  feature 1099  pearson_r=+0.641  decoder_cos=+0.714
+    #5  feature  883  pearson_r=-0.628  decoder_cos=-0.207
+
+  vtheta:
+    #1  feature  834  pearson_r=-0.823  decoder_cos=-0.381
+    #2  feature 1464  pearson_r=+0.807  decoder_cos=+0.228
+    #3  feature 1472  pearson_r=+0.770  decoder_cos=+0.268
+    #4  feature  477  pearson_r=+0.705  decoder_cos=+0.291
+    #5  feature  282  pearson_r=+0.688  decoder_cos=+0.268
+
+Saved ./sae/results\feature_decoder_cosine.png
+
+Done. Results in ./sae/results/

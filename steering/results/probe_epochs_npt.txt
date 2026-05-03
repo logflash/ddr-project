@@ -1,0 +1,311 @@
+C:\Users\ianh\AppData\Local\Programs\Python\Python312\Lib\site-packages\timm\layers\attention.py:120: UserWarning: 1Torch was not compiled with flash attention. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\builder\windows\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:555.)
+  x = F.scaled_dot_product_attention(
+Device: cuda
+Found 50 epoch checkpoints: epochs [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50]
+
+Epoch   1  (./checkpoints\vit_continuous_tiny_npt_epoch001.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=2.209
+  axis=vy  pos=119  neg=170  mean_dir_norm=0.295
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=1.406
+  best R2  vx=0.469  vy=0.178  vtheta=0.400
+
+Epoch   2  (./checkpoints\vit_continuous_tiny_npt_epoch002.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=2.877
+  axis=vy  pos=119  neg=170  mean_dir_norm=3.637
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=3.943
+  best R2  vx=0.557  vy=0.400  vtheta=0.516
+
+Epoch   3  (./checkpoints\vit_continuous_tiny_npt_epoch003.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=5.257
+  axis=vy  pos=119  neg=170  mean_dir_norm=5.869
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=7.279
+  best R2  vx=0.617  vy=0.438  vtheta=0.560
+
+Epoch   4  (./checkpoints\vit_continuous_tiny_npt_epoch004.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=6.655
+  axis=vy  pos=119  neg=170  mean_dir_norm=7.948
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=8.371
+  best R2  vx=0.644  vy=0.474  vtheta=0.595
+
+Epoch   5  (./checkpoints\vit_continuous_tiny_npt_epoch005.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=8.163
+  axis=vy  pos=119  neg=170  mean_dir_norm=6.969
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=10.101
+  best R2  vx=0.658  vy=0.513  vtheta=0.615
+
+Epoch   6  (./checkpoints\vit_continuous_tiny_npt_epoch006.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=8.461
+  axis=vy  pos=119  neg=170  mean_dir_norm=8.377
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=9.399
+  best R2  vx=0.670  vy=0.531  vtheta=0.620
+
+Epoch   7  (./checkpoints\vit_continuous_tiny_npt_epoch007.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=9.662
+  axis=vy  pos=119  neg=170  mean_dir_norm=8.317
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=11.026
+  best R2  vx=0.699  vy=0.579  vtheta=0.641
+
+Epoch   8  (./checkpoints\vit_continuous_tiny_npt_epoch008.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=10.296
+  axis=vy  pos=119  neg=170  mean_dir_norm=8.681
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=10.027
+  best R2  vx=0.706  vy=0.596  vtheta=0.650
+
+Epoch   9  (./checkpoints\vit_continuous_tiny_npt_epoch009.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=9.689
+  axis=vy  pos=119  neg=170  mean_dir_norm=8.413
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=10.476
+  best R2  vx=0.737  vy=0.615  vtheta=0.669
+
+Epoch  10  (./checkpoints\vit_continuous_tiny_npt_epoch010.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=10.043
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.351
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=11.080
+  best R2  vx=0.754  vy=0.638  vtheta=0.675
+
+Epoch  11  (./checkpoints\vit_continuous_tiny_npt_epoch011.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=10.203
+  axis=vy  pos=119  neg=170  mean_dir_norm=9.117
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=11.479
+  best R2  vx=0.755  vy=0.653  vtheta=0.699
+
+Epoch  12  (./checkpoints\vit_continuous_tiny_npt_epoch012.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=10.973
+  axis=vy  pos=119  neg=170  mean_dir_norm=10.347
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=11.958
+  best R2  vx=0.780  vy=0.664  vtheta=0.699
+
+Epoch  13  (./checkpoints\vit_continuous_tiny_npt_epoch013.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.233
+  axis=vy  pos=119  neg=170  mean_dir_norm=10.310
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=10.948
+  best R2  vx=0.788  vy=0.683  vtheta=0.706
+
+Epoch  14  (./checkpoints\vit_continuous_tiny_npt_epoch014.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.061
+  axis=vy  pos=119  neg=170  mean_dir_norm=9.156
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=12.772
+  best R2  vx=0.793  vy=0.685  vtheta=0.711
+
+Epoch  15  (./checkpoints\vit_continuous_tiny_npt_epoch015.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.205
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.171
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=12.453
+  best R2  vx=0.808  vy=0.718  vtheta=0.736
+
+Epoch  16  (./checkpoints\vit_continuous_tiny_npt_epoch016.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.560
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.523
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=12.949
+  best R2  vx=0.828  vy=0.722  vtheta=0.735
+
+Epoch  17  (./checkpoints\vit_continuous_tiny_npt_epoch017.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.065
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.182
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.403
+  best R2  vx=0.821  vy=0.746  vtheta=0.753
+
+Epoch  18  (./checkpoints\vit_continuous_tiny_npt_epoch018.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.526
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.640
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=13.958
+  best R2  vx=0.834  vy=0.748  vtheta=0.756
+
+Epoch  19  (./checkpoints\vit_continuous_tiny_npt_epoch019.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.032
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.781
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=13.907
+  best R2  vx=0.839  vy=0.763  vtheta=0.766
+
+Epoch  20  (./checkpoints\vit_continuous_tiny_npt_epoch020.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.953
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.705
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.851
+  best R2  vx=0.833  vy=0.763  vtheta=0.768
+
+Epoch  21  (./checkpoints\vit_continuous_tiny_npt_epoch021.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=13.001
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.682
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.117
+  best R2  vx=0.849  vy=0.757  vtheta=0.774
+
+Epoch  22  (./checkpoints\vit_continuous_tiny_npt_epoch022.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.375
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.594
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=13.785
+  best R2  vx=0.840  vy=0.772  vtheta=0.771
+
+Epoch  23  (./checkpoints\vit_continuous_tiny_npt_epoch023.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.473
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.833
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.161
+  best R2  vx=0.838  vy=0.776  vtheta=0.789
+
+Epoch  24  (./checkpoints\vit_continuous_tiny_npt_epoch024.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.831
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.799
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.115
+  best R2  vx=0.838  vy=0.788  vtheta=0.782
+
+Epoch  25  (./checkpoints\vit_continuous_tiny_npt_epoch025.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.840
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.969
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.587
+  best R2  vx=0.863  vy=0.796  vtheta=0.803
+
+Epoch  26  (./checkpoints\vit_continuous_tiny_npt_epoch026.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=13.031
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.905
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.517
+  best R2  vx=0.862  vy=0.799  vtheta=0.803
+
+Epoch  27  (./checkpoints\vit_continuous_tiny_npt_epoch027.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.910
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.604
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.677
+  best R2  vx=0.847  vy=0.799  vtheta=0.786
+
+Epoch  28  (./checkpoints\vit_continuous_tiny_npt_epoch028.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.411
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.538
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.073
+  best R2  vx=0.863  vy=0.809  vtheta=0.799
+
+Epoch  29  (./checkpoints\vit_continuous_tiny_npt_epoch029.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=12.138
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.654
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.848
+  best R2  vx=0.857  vy=0.812  vtheta=0.813
+
+Epoch  30  (./checkpoints\vit_continuous_tiny_npt_epoch030.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.852
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.122
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.751
+  best R2  vx=0.857  vy=0.801  vtheta=0.805
+
+Epoch  31  (./checkpoints\vit_continuous_tiny_npt_epoch031.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.967
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.758
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.918
+  best R2  vx=0.866  vy=0.824  vtheta=0.817
+
+Epoch  32  (./checkpoints\vit_continuous_tiny_npt_epoch032.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.944
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.837
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.533
+  best R2  vx=0.857  vy=0.812  vtheta=0.822
+
+Epoch  33  (./checkpoints\vit_continuous_tiny_npt_epoch033.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.949
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.497
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.690
+  best R2  vx=0.866  vy=0.815  vtheta=0.831
+
+Epoch  34  (./checkpoints\vit_continuous_tiny_npt_epoch034.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.955
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.959
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.848
+  best R2  vx=0.860  vy=0.821  vtheta=0.834
+
+Epoch  35  (./checkpoints\vit_continuous_tiny_npt_epoch035.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.583
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.339
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.741
+  best R2  vx=0.860  vy=0.833  vtheta=0.830
+
+Epoch  36  (./checkpoints\vit_continuous_tiny_npt_epoch036.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.437
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.307
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.977
+  best R2  vx=0.876  vy=0.841  vtheta=0.833
+
+Epoch  37  (./checkpoints\vit_continuous_tiny_npt_epoch037.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.673
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.451
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.973
+  best R2  vx=0.863  vy=0.834  vtheta=0.849
+
+Epoch  38  (./checkpoints\vit_continuous_tiny_npt_epoch038.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.367
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.394
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=15.169
+  best R2  vx=0.863  vy=0.841  vtheta=0.843
+
+Epoch  39  (./checkpoints\vit_continuous_tiny_npt_epoch039.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.411
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.357
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.906
+  best R2  vx=0.872  vy=0.843  vtheta=0.843
+
+Epoch  40  (./checkpoints\vit_continuous_tiny_npt_epoch040.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.568
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.503
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.840
+  best R2  vx=0.874  vy=0.841  vtheta=0.851
+
+Epoch  41  (./checkpoints\vit_continuous_tiny_npt_epoch041.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.439
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.120
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.651
+  best R2  vx=0.868  vy=0.850  vtheta=0.849
+
+Epoch  42  (./checkpoints\vit_continuous_tiny_npt_epoch042.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.312
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.097
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.646
+  best R2  vx=0.872  vy=0.847  vtheta=0.853
+
+Epoch  43  (./checkpoints\vit_continuous_tiny_npt_epoch043.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.207
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.314
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.769
+  best R2  vx=0.872  vy=0.853  vtheta=0.853
+
+Epoch  44  (./checkpoints\vit_continuous_tiny_npt_epoch044.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.286
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.899
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.729
+  best R2  vx=0.877  vy=0.851  vtheta=0.854
+
+Epoch  45  (./checkpoints\vit_continuous_tiny_npt_epoch045.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.173
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.051
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.788
+  best R2  vx=0.875  vy=0.853  vtheta=0.859
+
+Epoch  46  (./checkpoints\vit_continuous_tiny_npt_epoch046.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.108
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.022
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.490
+  best R2  vx=0.872  vy=0.851  vtheta=0.853
+
+Epoch  47  (./checkpoints\vit_continuous_tiny_npt_epoch047.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.075
+  axis=vy  pos=119  neg=170  mean_dir_norm=11.990
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.820
+  best R2  vx=0.875  vy=0.854  vtheta=0.855
+
+Epoch  48  (./checkpoints\vit_continuous_tiny_npt_epoch048.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.120
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.102
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.749
+  best R2  vx=0.873  vy=0.855  vtheta=0.857
+
+Epoch  49  (./checkpoints\vit_continuous_tiny_npt_epoch049.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.085
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.196
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.805
+  best R2  vx=0.874  vy=0.854  vtheta=0.859
+
+Epoch  50  (./checkpoints\vit_continuous_tiny_npt_epoch050.pth)
+  axis=vx  pos=1286  neg=314  mean_dir_norm=11.112
+  axis=vy  pos=119  neg=170  mean_dir_norm=12.110
+  axis=vtheta  pos=53  neg=207  mean_dir_norm=14.759
+  best R2  vx=0.873  vy=0.854  vtheta=0.858
+
+Saved ./steering/results\probe_r2_heatmap.png
+Saved ./steering/results\probe_r2_vs_epoch.png
+Saved ./steering/results\direction_stability.png
+Saved ./steering/results\probe_r2_layer6_vs_epoch.png
+
+Done. All plots saved to ./steering/results/

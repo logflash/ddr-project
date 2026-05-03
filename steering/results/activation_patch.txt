@@ -1,0 +1,114 @@
+C:\Users\ianh\AppData\Local\Programs\Python\Python312\Lib\site-packages\timm\layers\attention.py:120: UserWarning: 1Torch was not compiled with flash attention. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\builder\windows\pytorch\aten\src\ATen\native\transformers\cuda\sdp_utils.cpp:555.)
+  x = F.scaled_dot_product_attention(
+Device: cuda
+Loaded vit_tiny_patch16_224 from ./checkpoints/vit_continuous_tiny_best.pth  (epoch 21)
+
+Collecting probe activations...
+  vx: 1286 pos probe samples
+  vy: 119 pos probe samples
+  vtheta: 53 pos probe samples
+
+Collecting eval baselines...
+
+  axis=vx  neg_baseline=0.042  pos_baseline=0.982  n_neg=314
+    layer  0  effect=-0.000  success=5.7%
+    layer  1  effect=+0.003  success=5.7%
+    layer  2  effect=+0.004  success=5.7%
+    layer  3  effect=+0.016  success=5.7%
+    layer  4  effect=+0.033  success=5.7%
+    layer  5  effect=+0.043  success=5.7%
+    layer  6  effect=+0.127  success=5.7%
+    layer  7  effect=+0.526  success=72.0%
+    layer  8  effect=+0.546  success=76.4%
+    layer  9  effect=+0.746  success=99.4%
+    layer 10  effect=+0.907  success=100.0%
+    layer 11  effect=+0.998  success=100.0%
+
+  axis=vy  neg_baseline=-0.923  pos_baseline=0.863  n_neg=170
+    layer  0  effect=+0.000  success=1.2%
+    layer  1  effect=+0.000  success=1.2%
+    layer  2  effect=+0.001  success=1.8%
+    layer  3  effect=+0.008  success=1.8%
+    layer  4  effect=+0.018  success=2.4%
+    layer  5  effect=+0.020  success=2.4%
+    layer  6  effect=+0.066  success=2.4%
+    layer  7  effect=+0.203  success=4.1%
+    layer  8  effect=+0.248  success=4.1%
+    layer  9  effect=+0.964  success=100.0%
+    layer 10  effect=+1.024  success=100.0%
+    layer 11  effect=+1.026  success=100.0%
+
+  axis=vtheta  neg_baseline=-0.918  pos_baseline=0.832  n_neg=208
+    layer  0  effect=+0.000  success=0.0%
+    layer  1  effect=+0.000  success=0.0%
+    layer  2  effect=+0.000  success=0.0%
+    layer  3  effect=+0.003  success=0.0%
+    layer  4  effect=+0.004  success=0.0%
+    layer  5  effect=+0.001  success=0.0%
+    layer  6  effect=+0.043  success=3.4%
+    layer  7  effect=+0.170  success=0.5%
+    layer  8  effect=+0.223  success=0.5%
+    layer  9  effect=+0.672  success=100.0%
+    layer 10  effect=+1.040  success=100.0%
+    layer 11  effect=+1.040  success=100.0%
+
+Saved ./steering/results\activation_patch.png
+
+-- Causal sufficiency test --
+
+  axis=vx  causal_layer=11  natural_alpha=6.33  full_recovery=0.998
+    alpha=  0.00  recovery=+0.000  success=5.7%
+    alpha=  0.84  recovery=+0.132  success=5.7%
+    alpha=  1.69  recovery=+0.263  success=7.0%
+    alpha=  2.53  recovery=+0.393  success=8.9%
+    alpha=  3.37  recovery=+0.521  success=26.1%
+    alpha=  4.22  recovery=+0.648  success=99.4%
+    alpha=  5.06  recovery=+0.774  success=100.0%
+    alpha=  5.91  recovery=+0.898  success=100.0%
+    alpha=  6.75  recovery=+1.020  success=100.0%
+    alpha=  7.59  recovery=+1.141  success=100.0%
+    alpha=  8.44  recovery=+1.260  success=100.0%
+    alpha=  9.28  recovery=+1.378  success=100.0%
+    alpha= 10.12  recovery=+1.494  success=100.0%
+    alpha= 10.97  recovery=+1.608  success=100.0%
+    alpha= 11.81  recovery=+1.720  success=100.0%
+    alpha= 12.66  recovery=+1.830  success=100.0%
+
+  axis=vy  causal_layer=11  natural_alpha=10.99  full_recovery=1.026
+    alpha=  0.00  recovery=+0.000  success=1.2%
+    alpha=  1.47  recovery=+0.139  success=4.7%
+    alpha=  2.93  recovery=+0.277  success=5.3%
+    alpha=  4.40  recovery=+0.415  success=7.1%
+    alpha=  5.86  recovery=+0.552  success=63.5%
+    alpha=  7.33  recovery=+0.688  success=100.0%
+    alpha=  8.79  recovery=+0.822  success=100.0%
+    alpha= 10.26  recovery=+0.955  success=100.0%
+    alpha= 11.72  recovery=+1.086  success=100.0%
+    alpha= 13.19  recovery=+1.214  success=100.0%
+    alpha= 14.66  recovery=+1.340  success=100.0%
+    alpha= 16.12  recovery=+1.463  success=100.0%
+    alpha= 17.59  recovery=+1.583  success=100.0%
+    alpha= 19.05  recovery=+1.700  success=100.0%
+    alpha= 20.52  recovery=+1.815  success=100.0%
+    alpha= 21.98  recovery=+1.925  success=100.0%
+
+  axis=vtheta  causal_layer=10  natural_alpha=12.91  full_recovery=1.040
+    alpha=  0.00  recovery=+0.000  success=0.0%
+    alpha=  1.72  recovery=+0.143  success=6.2%
+    alpha=  3.44  recovery=+0.284  success=9.1%
+    alpha=  5.16  recovery=+0.424  success=11.5%
+    alpha=  6.88  recovery=+0.562  success=38.0%
+    alpha=  8.60  recovery=+0.698  success=100.0%
+    alpha= 10.32  recovery=+0.831  success=100.0%
+    alpha= 12.05  recovery=+0.962  success=100.0%
+    alpha= 13.77  recovery=+1.090  success=100.0%
+    alpha= 15.49  recovery=+1.216  success=100.0%
+    alpha= 17.21  recovery=+1.338  success=100.0%
+    alpha= 18.93  recovery=+1.458  success=100.0%
+    alpha= 20.65  recovery=+1.576  success=100.0%
+    alpha= 22.37  recovery=+1.690  success=100.0%
+    alpha= 24.09  recovery=+1.802  success=100.0%
+    alpha= 25.81  recovery=+1.910  success=100.0%
+
+Saved ./steering/results\activation_patch_sufficiency.png
+Done. Results saved to ./steering/results/
