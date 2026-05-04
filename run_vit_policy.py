@@ -57,7 +57,7 @@ if os.path.exists(_ENV_FILE):
 REMOTE_IP = os.environ.get("REMOTE_IP")
 STOP_ACTION = {"x.vel": 0.0, "y.vel": 0.0, "theta.vel": 0.0}
 
-# Pre-compute normalisation tensors (shape 3,1,1 for broadcasting over CHW)
+# Pre-compute normalization tensors (shape 3,1,1 for broadcasting over CHW)
 _MEAN = torch.tensor(IMAGENET_MEAN).view(3, 1, 1)
 _STD  = torch.tensor(IMAGENET_STD).view(3, 1, 1)
 
@@ -146,12 +146,12 @@ def main():
     parser.add_argument(
         "--steer-vy", type=float, default=None, metavar="ALPHA",
         help=(
-            "Steer lateral velocity at layer 9. "
-            "Negative alpha → veer right (−vy); positive alpha → veer left (+vy). "
+            "Strafe intervention at layer 9. "
+            "Negative alpha → strafe right (−vy); positive alpha → strafe left (+vy). "
             "(LeKiwi convention: positive y.vel = left, negative y.vel = right.) "
-            "Suggested interventions: --steer-vy -8 if robot drifts right, "
-            "--steer-vy +8 if robot drifts left. "
-            "Scale up to ±12 for stronger correction."
+            "Suggested interventions: --steer-vy -8 to strafe right, "
+            "--steer-vy +8 to strafe left. "
+            "Scale up to ±12 for stronger intervention."
         ),
     )
     parser.add_argument(
@@ -161,7 +161,7 @@ def main():
             "Negative alpha → rotate CW (−vtheta); positive alpha → rotate CCW (+vtheta). "
             "Suggested interventions: --steer-vtheta -8 if robot spins CW, "
             "--steer-vtheta +8 if robot spins CCW. "
-            "Scale up to ±12 for stronger correction."
+            "Scale up to ±12 for stronger intervention."
         ),
     )
     parser.add_argument(

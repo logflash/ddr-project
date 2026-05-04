@@ -93,7 +93,7 @@ def make_loaders(
 ) -> tuple[DataLoader, DataLoader]:
     normalize = transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
 
-    # Training augmentation: colour jitter only (no flips/rotation — they would
+    # Training augmentation: color jitter only (no flips/rotation — they would
     # change the spatial meaning of vy/vtheta labels)
     train_tf = transforms.Compose([
         transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2),
@@ -184,13 +184,13 @@ def continuous_metrics(
 def run_epoch(
     model: nn.Module,
     loader: DataLoader,
-    optimiser: torch.optim.Optimizer | None,
+    optimizer: torch.optim.Optimizer | None,
     mode: str,
     device: torch.device,
     scaler: torch.cuda.amp.GradScaler | None = None,
     desc: str = "",
 ) -> tuple[float, dict]:
-    training = optimiser is not None
+    training = optimizer is not None
     model.train(training)
 
     total_loss = 0.0
@@ -214,17 +214,17 @@ def run_epoch(
                     m     = continuous_metrics(preds, labels)
 
             if training:
-                optimiser.zero_grad(set_to_none=True)
+                optimizer.zero_grad(set_to_none=True)
                 if scaler is not None:
                     scaler.scale(loss).backward()
-                    scaler.unscale_(optimiser)
+                    scaler.unscale_(optimizer)
                     nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-                    scaler.step(optimiser)
+                    scaler.step(optimizer)
                     scaler.update()
                 else:
                     loss.backward()
                     nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-                    optimiser.step()
+                    optimizer.step()
 
             total_loss += loss.item()
             n_batches  += 1
@@ -273,13 +273,13 @@ def train(args: argparse.Namespace) -> None:
     else:
         head_params = list(model.head.parameters())
 
-    optimiser = torch.optim.AdamW([
+    optimizer = torch.optim.AdamW([
         {"params": backbone_params, "lr": args.backbone_lr},
         {"params": head_params,     "lr": args.head_lr},
     ], weight_decay=args.weight_decay)
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optimiser, T_max=args.epochs, eta_min=1e-6
+        optimizer, T_max=args.epochs, eta_min=1e-6
     )
 
     use_amp = device.type == "cuda"
@@ -300,7 +300,7 @@ def train(args: argparse.Namespace) -> None:
     for epoch in range(1, args.epochs + 1):
         t0 = time.time()
 
-        train_loss, train_m = run_epoch(model, train_loader, optimiser, args.mode, device, scaler, desc=f"Ep {epoch:3d} train")
+        train_loss, train_m = run_epoch(model, train_loader, optimizer, args.mode, device, scaler, desc=f"Ep {epoch:3d} train")
         val_loss,   val_m   = run_epoch(model, val_loader,   None,      args.mode, device, desc=f"Ep {epoch:3d} val  ")
         scheduler.step()
 
@@ -361,7 +361,7 @@ def train(args: argparse.Namespace) -> None:
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Train ViT behaviour-cloning policy")
+    parser = argparse.ArgumentParser(description="Train ViT behavior-cloning policy")
     parser.add_argument("--mode",         choices=["categorical", "continuous"],
                         required=True)
     parser.add_argument("--data-path",    default="./data/dataset_full.npz")

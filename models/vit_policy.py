@@ -1,7 +1,7 @@
 """
 vit_policy.py
 
-ViT-based behaviour-cloning policy for the LeKiwi robot.
+ViT-based behavior-cloning policy for the LeKiwi robot.
 
 Two variants share the same vit_small_patch16_224 backbone (pretrained
 ImageNet) and expose the CLS-token residual stream for SAE / steering work.
@@ -32,7 +32,7 @@ VX_VALUES     = torch.tensor([0.0,        VX_MAX                ])  # 2 classes
 VY_VALUES     = torch.tensor([-VY_MAX,    0.0,       VY_MAX     ])  # 3 classes
 VTHETA_VALUES = torch.tensor([-VTHETA_MAX, 0.0,      VTHETA_MAX ])  # 3 classes
 
-# ImageNet normalisation (applied in the DataLoader, not here)
+# ImageNet normalization (applied in the DataLoader, not here)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD  = [0.229, 0.224, 0.225]
 

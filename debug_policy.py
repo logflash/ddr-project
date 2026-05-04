@@ -69,7 +69,7 @@ def preprocess_deployment(img_hwc_bgr_uint8: np.ndarray, device: torch.device) -
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="checkpoints/vit_continuous_tiny_npt_best.pth")
+    parser.add_argument("--model", default="checkpoints/vit_continuous_tiny_best.pth")
     parser.add_argument("--data",  default="data/dataset_full.npz")
     parser.add_argument("--splits-dir", default="data/splits")
     parser.add_argument("--n",     type=int, default=300, help="Val images to test")
