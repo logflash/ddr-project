@@ -20,7 +20,7 @@ Outputs saved to --out-dir:
     activation_patch.png   -- normalized effect + success rate per layer per axis
 
 Usage:
-    py steering/activation_patch.py --ckpt checkpoints/vit_continuous_tiny_best.pth
+    python steering/activation_patch.py --ckpt checkpoints/vit_continuous_tiny_best.pth
 """
 
 from __future__ import annotations
@@ -48,7 +48,7 @@ from vit_train import LekiwiDataset
 from steer import AXIS_IDX, AXIS_NAMES, CONTRAST_THRESH, BOUNDARY
 
 
-# -- hooks --------------------------------------------------------------------
+# ── Hooks ─────────────────────────────────────────────────────────────────────
 
 def make_patch_hook(cls_vec: torch.Tensor) -> Callable:
     """Replace the CLS token (position 0) with cls_vec for every sample in batch."""
@@ -59,7 +59,7 @@ def make_patch_hook(cls_vec: torch.Tensor) -> Callable:
     return _hook
 
 
-# -- collection helpers -------------------------------------------------------
+# ── Collection helpers ────────────────────────────────────────────────────────
 
 @torch.no_grad()
 def collect_all(
@@ -139,7 +139,7 @@ def run_steered_subset(
     return np.concatenate(all_preds, axis=0)
 
 
-# -- main ---------------------------------------------------------------------
+# ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -161,7 +161,7 @@ def main() -> None:
     )
     print(f"Device: {device}")
 
-    # -- Load model -----------------------------------------------------------
+    # ── Load model ───────────────────────────────────────────────────────────
     ckpt     = torch.load(args.ckpt, map_location=device, weights_only=False)
     assert ckpt["mode"] == "continuous"
     fname    = os.path.basename(args.ckpt)
@@ -174,7 +174,7 @@ def main() -> None:
 
     tf = transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
 
-    # -- Probe set: collect streams + compute mean pos CLS per axis -----------
+    # ── Probe set: collect streams and mean pos CLS per axis ─────────────────
     probe_idx = np.load(os.path.join(args.splits_dir, "steer_probe_idx.npy"))
     probe_ds  = LekiwiDataset(args.data_path, probe_idx, mode="continuous", transform=tf)
     probe_loader = DataLoader(probe_ds, batch_size=args.batch_size,
@@ -197,7 +197,7 @@ def main() -> None:
         mean_pos_cls[axis_name] = probe_streams[pos_mask].mean(axis=0)  # (L, D)
         print(f"  {axis_name}: {pos_mask.sum()} pos probe samples")
 
-    # -- Eval set: collect baseline outputs + labels --------------------------
+    # ── Eval set: collect baseline outputs and labels ────────────────────────
     eval_idx = np.load(os.path.join(args.splits_dir, "steer_eval_idx.npy"))
     eval_ds  = LekiwiDataset(args.data_path, eval_idx, mode="continuous", transform=tf)
     eval_loader = DataLoader(eval_ds, batch_size=args.batch_size,
@@ -207,7 +207,7 @@ def main() -> None:
     _, eval_outputs, eval_labels = collect_all(model, eval_loader, device)
     # eval_outputs: (N_eval, 3)
 
-    # -- Patching sweep per axis ----------------------------------------------
+    # ── Patching sweep per axis ──────────────────────────────────────────────
     results = {}
 
     for axis_name, axis_i in AXIS_IDX.items():
@@ -259,7 +259,7 @@ def main() -> None:
             "pos_baseline":  pos_baseline,
         }
 
-    # -- Plot -----------------------------------------------------------------
+    # ── Plot ─────────────────────────────────────────────────────────────────
     fig, axes = plt.subplots(2, 3, figsize=(18, 8))
     colors = ["steelblue", "tomato", "darkorange"]
     layers = np.arange(n_layers)
@@ -299,7 +299,7 @@ def main() -> None:
     plt.close(fig)
     print(f"\nSaved {path}")
 
-    # -- Causal sufficiency: does the steering direction alone recover the effect? --
+    # ── Causal sufficiency test ───────────────────────────────────────────────
     # At the causal layer (argmax of full-patching effect), sweep alpha while
     # ADDING only the contrastive direction to the neg CLS (not replacing it).
     # If recovery approaches the full-patch baseline, the direction is causally sufficient.

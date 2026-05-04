@@ -35,7 +35,7 @@ from torch.utils.data import DataLoader
 from sklearn.linear_model import Ridge
 from sklearn.metrics import r2_score
 
-# -- path: find sibling models/ dir regardless of cwd ------------------------─
+# ── Path setup ────────────────────────────────────────────────────────────────
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_HERE, "..", "models"))
 
@@ -44,13 +44,13 @@ from vit_policy import (ViTContinuous, collect_cls_streams, make_steer_hook,
                         IMAGENET_MEAN, IMAGENET_STD)
 from vit_train import LekiwiDataset
 
-# -- constants ----------------------------------------------------------------─
+# ── Constants ─────────────────────────────────────────────────────────────────
 AXIS_IDX   = {"vx": 0, "vy": 1, "vtheta": 2}
 AXIS_NAMES = ["vx", "vy", "vtheta"]
 CONTRAST_THRESH = 0.4   # normalised units; labels are in [-1, 1]
 
 
-# -- model loading ------------------------------------------------------------─
+# ── Model loading ─────────────────────────────────────────────────────────────
 
 def load_model(ckpt_path: str, device: torch.device) -> tuple[ViTContinuous, dict]:
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
@@ -67,7 +67,7 @@ def load_model(ckpt_path: str, device: torch.device) -> tuple[ViTContinuous, dic
     return model, ckpt
 
 
-# -- activation collection ----------------------------------------------------─
+# ── Activation collection ─────────────────────────────────────────────────────
 
 @torch.no_grad()
 def collect_activations(
@@ -89,7 +89,7 @@ def collect_activations(
     return np.concatenate(all_acts, axis=0), np.concatenate(all_labels, axis=0)
 
 
-# -- steering directions ------------------------------------------------------─
+# ── Steering directions ───────────────────────────────────────────────────────
 
 def compute_directions(
     acts: np.ndarray,    # (N, L, D)
@@ -126,7 +126,7 @@ def compute_directions(
     return dirs
 
 
-# -- layer scoring via linear probe ------------------------------------------─
+# ── Layer scoring via linear probe ────────────────────────────────────────────
 
 def score_layers(
     acts: np.ndarray,    # (N, L, D)
@@ -147,7 +147,7 @@ def score_layers(
     return r2
 
 
-# -- steering evaluation ------------------------------------------------------─
+# ── Steering evaluation ────────────────────────────────────────────────────────
 
 # Decision boundaries for success-rate metric (normalised units)
 BOUNDARY = {"vx": 0.5, "vy": 0.0, "vtheta": 0.0}
@@ -234,7 +234,7 @@ def evaluate_steering(
     }
 
 
-# -- plotting ------------------------------------------------------------------
+# ── Plotting ──────────────────────────────────────────────────────────────────
 
 def plot_layer_scores(r2: np.ndarray, out_dir: str) -> None:
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -299,7 +299,7 @@ def plot_dose_response(results: dict, axis_name: str, layer: int, out_dir: str) 
     print(f"Saved {path}")
 
 
-# -- main ----------------------------------------------------------------------
+# ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Contrastive steering for ViTContinuous")
@@ -331,7 +331,7 @@ def main() -> None:
     )
     print(f"Device: {device}")
 
-    # -- 1. Load model --------------------------------------------------------─
+    # ── 1. Load model ────────────────────────────────────────────────────────
     model, _ = load_model(args.ckpt, device)
 
     tf = transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
@@ -342,17 +342,17 @@ def main() -> None:
         return DataLoader(ds, batch_size=args.batch_size, shuffle=False,
                           num_workers=args.num_workers)
 
-    # -- 2. Collect activations on steer_probe --------------------------------─
+    # ── 2. Collect activations on steer_probe ────────────────────────────────
     print("\n-- Collecting probe activations --")
     probe_loader = make_loader("steer_probe_idx.npy")
     probe_acts, probe_labels = collect_activations(model, probe_loader, device)
     print(f"  probe_acts: {probe_acts.shape}   probe_labels: {probe_labels.shape}")
 
-    # -- 3. Compute contrastive directions ------------------------------------─
+    # ── 3. Compute contrastive directions ────────────────────────────────────
     print("\n-- Computing steering directions --")
     directions = compute_directions(probe_acts, probe_labels)
 
-    # -- 4. Score layers ------------------------------------------------------─
+    # ── 4. Score layers ──────────────────────────────────────────────────────
     print("\n-- Scoring layers via linear probe --")
     r2 = score_layers(probe_acts, probe_labels)
     plot_layer_scores(r2, args.out_dir)
@@ -367,7 +367,7 @@ def main() -> None:
     best_layers = {name: int(r2[:, i].argmax()) for i, name in enumerate(AXIS_NAMES)}
     print(f"\nBest layers: { {k: v for k, v in best_layers.items()} }")
 
-    # -- 5. Evaluate steering on steer_eval ------------------------------------
+    # ── 5. Evaluate steering on steer_eval ───────────────────────────────────
     print("\n-- Evaluating steering on steer_eval --")
     eval_loader = make_loader("steer_eval_idx.npy")
     alpha_min = args.alpha_min if args.alpha_min is not None else -args.alpha_max
@@ -393,7 +393,7 @@ def main() -> None:
             off = "  ".join(f"{dall[i]:+.4f}" for i in range(3))
             print(f"    alpha={a:6.2f}  delta={d:+.4f}  cond_success={s*100:5.1f}%  [{off}]")
 
-    # -- Save steering vectors ------------------------------------------------
+    # ── Save steering vectors ────────────────────────────────────────────────
     if args.save_vecs:
         vecs_ckpt = {
             "ckpt":   args.ckpt,

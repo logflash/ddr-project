@@ -72,7 +72,7 @@ def main() -> None:
     unique, counts = np.unique(raw_strata, return_counts=True)
     print("\nStrata distribution (source × action):")
     vx_names  = ["vx=0  ", "vx=fwd"]
-    vy_names  = ["vy=L  ", "vy=0  ", "vy=R  "]
+    vy_names  = ["vy=R  ", "vy=0  ", "vy=L  "]  # vy<0 = right, vy>0 = left (LeKiwi convention)
     vth_names = ["vt=CW ", "vt=0  ", "vt=CCW"]
     for s, c in zip(unique, counts):
         src_id  = s // n_action_strata

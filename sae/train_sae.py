@@ -12,8 +12,8 @@ Outputs:
     sae/results/feature_decoder_cosine.png  -- decoder direction vs steering vec
 
 Usage:
-    py sae/train_sae.py
-    py sae/train_sae.py --l1 5e-4 --epochs 100
+    python sae/train_sae.py
+    python sae/train_sae.py --l1 5e-4 --epochs 100
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ AXIS_NAMES     = ["vx", "vy", "vtheta"]
 CONTRAST_THRESH = 0.4
 
 
-# -- SAE model ----------------------------------------------------------------
+# ── SAE model ─────────────────────────────────────────────────────────────────
 
 class SparseAutoencoder(nn.Module):
     """
@@ -91,7 +91,7 @@ class SparseAutoencoder(nn.Module):
         self.W_dec.data = F.normalize(self.W_dec.data, dim=1)
 
 
-# -- activation collection ----------------------------------------------------
+# ── Activation collection ─────────────────────────────────────────────────────
 
 @torch.no_grad()
 def collect_layer_acts(
@@ -113,7 +113,7 @@ def collect_layer_acts(
     )
 
 
-# -- SAE training -------------------------------------------------------------
+# ── SAE training ──────────────────────────────────────────────────────────────
 
 def train_sae(
     acts:       torch.Tensor,
@@ -157,7 +157,7 @@ def train_sae(
     return sae
 
 
-# -- feature analysis ---------------------------------------------------------
+# ── Feature analysis ──────────────────────────────────────────────────────────
 
 def compute_correlations(
     h_probe: np.ndarray,   # (N, F)
@@ -174,7 +174,7 @@ def compute_correlations(
     return np.where(denom > 1e-6, cov / denom, 0.0)            # (F, 3)
 
 
-# -- main ---------------------------------------------------------------------
+# ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -206,7 +206,7 @@ def main() -> None:
     )
     print(f"Device: {device}")
 
-    # -- Load ViT model -------------------------------------------------------
+    # ── Load ViT model ───────────────────────────────────────────────────────
     ckpt     = torch.load(args.ckpt, map_location=device, weights_only=False)
     fname    = os.path.basename(args.ckpt)
     fallback = "vit_tiny_patch16_224" if "tiny" in fname else "vit_small_patch16_224"
@@ -229,7 +229,7 @@ def main() -> None:
         return DataLoader(ds, batch_size=args.batch_size, shuffle=False,
                           num_workers=args.num_workers)
 
-    # -- Collect activations --------------------------------------------------
+    # ── Collect activations ──────────────────────────────────────────────────
     print(f"\nCollecting train activations at layer {args.layer}...")
     train_acts, _ = collect_layer_acts(
         model, make_loader("train_idx.npy"), args.layer, device
@@ -242,7 +242,7 @@ def main() -> None:
     )
     print(f"  probe_acts: {probe_acts.shape}")
 
-    # -- Train SAE ------------------------------------------------------------
+    # ── Train SAE ────────────────────────────────────────────────────────────
     mode_str = f"topk={args.topk}" if args.topk > 0 else f"l1={args.l1}"
     print(f"\nTraining SAE  ({mode_str}  epochs={args.epochs})...")
     sae          = SparseAutoencoder(d_model, n_features, k=args.topk)
@@ -262,7 +262,7 @@ def main() -> None:
     }, args.sae_ckpt)
     print(f"Saved SAE to {args.sae_ckpt}")
 
-    # -- SAE statistics on probe set ------------------------------------------
+    # ── SAE statistics on probe set ──────────────────────────────────────────
     probe_t = torch.tensor(probe_acts, dtype=torch.float32).to(device)
     with torch.no_grad():
         h_probe_t, x_hat_t = sae(probe_t)
@@ -277,7 +277,7 @@ def main() -> None:
     print(f"  Mean L0 (active/sample): {l0:.1f} / {n_features}")
     print(f"  Dead features         : {n_dead} / {n_features}")
 
-    # -- Feature correlations with action axes --------------------------------
+    # ── Feature correlations with action axes ────────────────────────────────
     corr = compute_correlations(h_probe, probe_labels)   # (F, 3)
 
     print(f"\nTop {args.top_k} features per axis (by |Pearson r|):")
@@ -293,7 +293,7 @@ def main() -> None:
             print(f"    #{rank+1}  feature {feat_i:4d}  r={r:+.3f}  "
                   f"active={act_rate*100:.1f}%  mean_activation={mean_act:.3f}")
 
-    # -- Scatter plots: top features vs action labels -------------------------
+    # ── Scatter plots: top features vs action labels ─────────────────────────
     TOP_PLOT = min(3, args.top_k)
     colors   = ["steelblue", "tomato", "darkorange"]
     fig, axes = plt.subplots(3, TOP_PLOT, figsize=(5 * TOP_PLOT, 12))
@@ -317,7 +317,7 @@ def main() -> None:
     plt.close(fig)
     print(f"\nSaved {path}")
 
-    # -- Decoder direction vs contrastive steering direction ------------------
+    # ── Decoder direction vs steering direction ───────────────────────────────
     steer_dirs: dict[str, np.ndarray] = {}
     for ai, aname in enumerate(AXIS_NAMES):
         col      = probe_labels[:, ai]

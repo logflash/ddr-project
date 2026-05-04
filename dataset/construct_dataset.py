@@ -33,6 +33,7 @@ import argparse
 import glob
 import os
 
+import av
 import cv2
 import numpy as np
 import pandas as pd
@@ -71,20 +72,15 @@ def load_parquet_labels(raw_dir: str) -> pd.DataFrame:
 
 def decode_video(video_path: str) -> list[np.ndarray]:
     """Decode all frames from an MP4 as uint8 RGB arrays resized to IMAGE_SIZE x IMAGE_SIZE."""
-    cap = cv2.VideoCapture(video_path)
-    if not cap.isOpened():
-        raise IOError(f"Cannot open video: {video_path}")
-
+    container = av.open(video_path)
+    stream = container.streams.video[0]
     frames = []
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.resize(frame, (IMAGE_SIZE, IMAGE_SIZE), interpolation=cv2.INTER_AREA)
-        frames.append(frame)
-
-    cap.release()
+    for packet in container.demux(stream):
+        for frame in packet.decode():
+            arr = frame.to_ndarray(format="rgb24")
+            arr = cv2.resize(arr, (IMAGE_SIZE, IMAGE_SIZE), interpolation=cv2.INTER_AREA)
+            frames.append(arr)
+    container.close()
     return frames
 
 

@@ -3,5 +3,6 @@ checkpoints*
 !dataset
 !checkpoints/
 checkpoints/*
-!checkpoints/*_tiny_best.pth
+!checkpoints/*_tiny_best*.pth
 **/__pycache__
+.env

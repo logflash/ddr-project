@@ -13,8 +13,8 @@ Outputs saved to --out-dir:
   direction_stability.png   -- cosine sim to final-epoch direction (layer x epoch)
 
 Usage:
-    py steering/probe_epochs.py --mode continuous --size tiny
-    py steering/probe_epochs.py --mode continuous --size tiny --ckpt-dir checkpoints
+    python steering/probe_epochs.py --mode continuous --size tiny
+    python steering/probe_epochs.py --mode continuous --size tiny --ckpt-dir checkpoints
 """
 
 from __future__ import annotations
@@ -86,7 +86,7 @@ def main() -> None:
     print(f"Found {len(epoch_ckpts)} epoch checkpoints: "
           f"epochs {[e for e, _ in epoch_ckpts]}")
 
-    # Build probe loader once -- reused for every checkpoint
+    # Build probe loader once — reused for every checkpoint
     tf = transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD)
     idx = np.load(os.path.join(args.splits_dir, "steer_probe_idx.npy"))
     probe_ds = LekiwiDataset(args.data_path, idx, mode="continuous", transform=tf)
@@ -121,7 +121,7 @@ def main() -> None:
     r2_arr  = np.stack(all_r2, axis=0)   # (T, L, 3)
     n_layers = r2_arr.shape[1]
 
-    # -- Plot 1: R2 heatmap (layer x epoch) per axis --------------------------
+    # ── Plot 1: R2 heatmap (layer x epoch) per axis ──────────────────────────
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     for ai, aname in enumerate(AXIS_NAMES):
         ax   = axes[ai]
@@ -141,7 +141,7 @@ def main() -> None:
     plt.close(fig)
     print(f"\nSaved {path}")
 
-    # -- Plot 2: Best-layer R2 vs epoch, all axes -----------------------------
+    # ── Plot 2: Best-layer R2 vs epoch, all axes ─────────────────────────────
     fig, ax = plt.subplots(figsize=(8, 4))
     colors = ["steelblue", "tomato", "darkorange"]
     for ai, aname in enumerate(AXIS_NAMES):
@@ -157,7 +157,7 @@ def main() -> None:
     plt.close(fig)
     print(f"Saved {path}")
 
-    # -- Plot 3: Direction stability (cosine sim to final-epoch direction) -----
+    # ── Plot 3: Direction stability (cosine sim to final-epoch direction) ────
     final_dirs = all_dirs[-1]
     fig, axes  = plt.subplots(1, 3, figsize=(18, 5))
     for ai, aname in enumerate(AXIS_NAMES):
@@ -187,7 +187,7 @@ def main() -> None:
     plt.close(fig)
     print(f"Saved {path}")
 
-    # -- Plot 4: Fixed-layer R2 vs epoch (one line per axis) --------------------
+    # ── Plot 4: Fixed-layer R2 vs epoch (one line per axis) ──────────────────
     layer = min(args.probe_layer, n_layers - 1)
     fig, ax = plt.subplots(figsize=(8, 4))
     for ai, aname in enumerate(AXIS_NAMES):
