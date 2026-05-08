@@ -73,10 +73,7 @@ def preprocess(frame: np.ndarray, device: torch.device) -> torch.Tensor:
     return t.unsqueeze(0).to(device)
 
 
-_STEER_LAYER = 9
-_DEFAULT_STEER_VECS = os.path.join(
-    _SCRIPT_DIR, "checkpoints", "vit_continuous_tiny_best_steer_vecs_layer9.pth"
-)
+_DEFAULT_STEER_LAYER = 9
 
 
 def load_steer_vecs(pth_path: str, device: torch.device) -> dict[str, torch.Tensor]:
@@ -165,10 +162,18 @@ def main():
         ),
     )
     parser.add_argument(
-        "--steer-vecs", default=_DEFAULT_STEER_VECS,
-        help="Path to steering-vectors .pth bundle (default: checkpoints/vit_continuous_tiny_best_steer_vecs_layer9.pth)",
+        "--steer-layer", type=int, default=_DEFAULT_STEER_LAYER,
+        help=f"Layer index for steering intervention (default: {_DEFAULT_STEER_LAYER})",
+    )
+    parser.add_argument(
+        "--steer-vecs", default=None,
+        help="Path to steering-vectors .pth bundle (default: auto-derived from --model and --steer-layer)",
     )
     args = parser.parse_args()
+
+    if args.steer_vecs is None:
+        base = os.path.splitext(args.model)[0]
+        args.steer_vecs = f"{base}_steer_vecs_layer{args.steer_layer}.pth"
 
     if not args.remote_ip:
         sys.exit("Error: set REMOTE_IP env var or pass --remote-ip <ip>")
@@ -192,20 +197,20 @@ def main():
         vecs = load_steer_vecs(args.steer_vecs, device)
         if args.steer_vy is not None:
             steer_hooks.append(
-                model.backbone.blocks[_STEER_LAYER].register_forward_hook(
+                model.backbone.blocks[args.steer_layer].register_forward_hook(
                     make_steer_hook(vecs["vy"], alpha=args.steer_vy)
                 )
             )
             direction = "left (+vy)" if args.steer_vy >= 0 else "right (−vy)"
-            print(f"Steering : vy      alpha={args.steer_vy:+.1f}  layer={_STEER_LAYER}  → {direction}")
+            print(f"Steering : vy      alpha={args.steer_vy:+.1f}  layer={args.steer_layer}  → {direction}")
         if args.steer_vtheta is not None:
             steer_hooks.append(
-                model.backbone.blocks[_STEER_LAYER].register_forward_hook(
+                model.backbone.blocks[args.steer_layer].register_forward_hook(
                     make_steer_hook(vecs["vtheta"], alpha=args.steer_vtheta)
                 )
             )
             direction = "CCW (+vtheta)" if args.steer_vtheta >= 0 else "CW (−vtheta)"
-            print(f"Steering : vtheta  alpha={args.steer_vtheta:+.1f}  layer={_STEER_LAYER}  → {direction}")
+            print(f"Steering : vtheta  alpha={args.steer_vtheta:+.1f}  layer={args.steer_layer}  → {direction}")
 
     robot_config = LeKiwiClientConfig(remote_ip=args.remote_ip, id="lekiwi")
     robot        = LeKiwiClient(robot_config)

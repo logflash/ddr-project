@@ -4,5 +4,6 @@ checkpoints*
 !checkpoints/
 checkpoints/*
 !checkpoints/*_tiny_best*.pth
+**/results_*
 **/__pycache__
 .env

@@ -234,17 +234,78 @@ def evaluate_steering(
     }
 
 
+# ── Per-layer steering sweep ──────────────────────────────────────────────────
+
+@torch.no_grad()
+def evaluate_steering_per_layer(
+    model:      ViTContinuous,
+    loader:     DataLoader,
+    directions: dict[str, np.ndarray],  # axis -> (L, D)
+    alpha:      float,
+    device:     torch.device,
+) -> dict[str, np.ndarray]:
+    """
+    At a fixed positive alpha, apply the contrastive steering vector at each layer
+    and measure conditional success rate for each axis.
+    Returns success_per_layer[axis] shaped (L,).
+    """
+    n_layers = len(model.backbone.blocks)
+
+    # Collect baselines once (no hooks)
+    base_all, imgs_batches = [], []
+    for imgs, _ in loader:
+        imgs = imgs.to(device)
+        imgs_batches.append(imgs)
+        base_all.append(model(imgs).cpu().numpy())
+    base_all = np.concatenate(base_all, axis=0)   # (N, 3)
+
+    results: dict[str, np.ndarray] = {}
+    for axis_name, axis_i in AXIS_IDX.items():
+        boundary = BOUNDARY[axis_name]
+        base_tgt = base_all[:, axis_i]
+        eligible  = base_tgt <= boundary   # frames to push upward
+
+        success_rates = []
+        for layer_idx in range(n_layers):
+            vec  = torch.tensor(directions[axis_name][layer_idx],
+                                dtype=torch.float32).to(device)
+            hook = model.backbone.blocks[layer_idx].register_forward_hook(
+                make_steer_hook(vec, alpha=alpha)
+            )
+            steered_tgt = []
+            for imgs in imgs_batches:
+                steered_tgt.append(model(imgs).cpu().numpy()[:, axis_i])
+            hook.remove()
+
+            steered_tgt = np.concatenate(steered_tgt)
+            rate = float((steered_tgt[eligible] > boundary).mean()) \
+                   if eligible.sum() > 0 else 0.0
+            success_rates.append(rate)
+
+        results[axis_name] = np.array(success_rates)
+    return results
+
+
 # ── Plotting ──────────────────────────────────────────────────────────────────
 
 def plot_layer_scores(r2: np.ndarray, out_dir: str) -> None:
-    fig, ax = plt.subplots(figsize=(8, 4))
+    axis_colors = {"vx": "steelblue", "vy": "tomato", "vtheta": "darkorange"}
+    n_layers = r2.shape[0]
+    layers = np.arange(n_layers)
+    fig, ax = plt.subplots(figsize=(7, 4.5))
     for i, name in enumerate(AXIS_NAMES):
-        ax.plot(r2[:, i], marker="o", label=name)
-    ax.set_xlabel("Layer")
-    ax.set_ylabel("R² (linear probe)")
-    ax.set_title("Linear probe R² per layer")
-    ax.legend()
+        ax.plot(layers, r2[:, i], marker="o", label=name,
+                color=axis_colors[name], linewidth=1.8)
+    ax.set_xlabel("Layer", fontsize=11)
+    ax.set_ylabel("R² (linear probe)", fontsize=11)
+    ax.set_title("Linear probe R² per layer", fontsize=12)
+    ax.set_xticks(layers)
+    ax.set_xticklabels([str(l) for l in layers])
+    ax.set_xlim(-0.5, n_layers - 0.5)
+    ax.set_ylim(0, 1.0)
+    ax.legend(fontsize=9, loc="lower right")
     ax.grid(True, alpha=0.3)
+    fig.tight_layout()
     path = os.path.join(out_dir, "layer_probe_r2.png")
     fig.savefig(path, dpi=150, bbox_inches="tight")
     plt.close(fig)
@@ -299,6 +360,38 @@ def plot_dose_response(results: dict, axis_name: str, layer: int, out_dir: str) 
     print(f"Saved {path}")
 
 
+def plot_steering_per_layer(
+    success: dict[str, np.ndarray],
+    alpha: float,
+    out_dir: str,
+) -> None:
+    HIGHLIGHT = (0.95, 0.88, 0.55)
+    axis_colors = {"vx": "steelblue", "vy": "tomato", "vtheta": "darkorange"}
+    n_layers = next(iter(success.values())).shape[0]
+    layers = np.arange(n_layers)
+
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    for axis_name, rates in success.items():
+        ax.plot(layers, rates, marker="o", label=axis_name,
+                color=axis_colors.get(axis_name, "gray"), linewidth=1.8)
+    ax.axvspan(8.5, 11.5, color=HIGHLIGHT, alpha=0.25, zorder=0)
+    ax.axhline(1.0, color="gray", linewidth=0.8, linestyle="--", alpha=0.6)
+    ax.set_xlabel("Layer steered", fontsize=11)
+    ax.set_ylabel("Conditional success rate", fontsize=11)
+    ax.set_title(f"Steering success per layer  (α = {alpha:+.1f})", fontsize=12)
+    ax.set_xticks(layers)
+    ax.set_xticklabels([str(l) for l in layers])
+    ax.set_xlim(-0.5, n_layers - 0.5)
+    ax.set_ylim(0, 1.15)
+    ax.legend(fontsize=9, loc="lower right")
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    path = os.path.join(out_dir, "steering_per_layer.png")
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved {path}")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
@@ -321,6 +414,10 @@ def main() -> None:
                         help="Save steering vectors to this path "
                              "(e.g. ./checkpoints/steering_vecs_layer9.pth). "
                              "Empty = don't save.")
+    parser.add_argument("--alpha-layer-sweep", type=float, default=7.5,
+                        help="Fixed alpha used for the per-layer steering success sweep (default: 7.5)")
+    parser.add_argument("--linear-probe", action="store_true",
+                        help="Only run linear probe R² analysis; skip steering evaluation")
     args = parser.parse_args()
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -367,6 +464,10 @@ def main() -> None:
     best_layers = {name: int(r2[:, i].argmax()) for i, name in enumerate(AXIS_NAMES)}
     print(f"\nBest layers: { {k: v for k, v in best_layers.items()} }")
 
+    if args.linear_probe:
+        print(f"\nDone. Results saved to {args.out_dir}/")
+        return
+
     # ── 5. Evaluate steering on steer_eval ───────────────────────────────────
     print("\n-- Evaluating steering on steer_eval --")
     eval_loader = make_loader("steer_eval_idx.npy")
@@ -392,6 +493,17 @@ def main() -> None:
                                   results["success_rate"], results["mean_delta_all"]):
             off = "  ".join(f"{dall[i]:+.4f}" for i in range(3))
             print(f"    alpha={a:6.2f}  delta={d:+.4f}  cond_success={s*100:5.1f}%  [{off}]")
+
+    # ── 6. Per-layer steering success sweep ─────────────────────────────────
+    print(f"\n-- Per-layer steering success (alpha={args.alpha_layer_sweep:+.1f}) --")
+    per_layer_success = evaluate_steering_per_layer(
+        model, eval_loader, directions, args.alpha_layer_sweep, device
+    )
+    for axis_name, rates in per_layer_success.items():
+        best = int(np.argmax(rates))
+        print(f"  {axis_name}: best layer={best}  "
+              + "  ".join(f"L{l}={r:.2f}" for l, r in enumerate(rates)))
+    plot_steering_per_layer(per_layer_success, args.alpha_layer_sweep, args.out_dir)
 
     # ── Save steering vectors ────────────────────────────────────────────────
     if args.save_vecs:
